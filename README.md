@@ -6,7 +6,7 @@
 
 * ソースファイルのチェックアウト
 ```
- git clone https://github.com/deno78/mmsensor.git
+ git clone https://github.com/tt-hasegawa/mmsensor.git
 ```
 
 * サーバ側作業
