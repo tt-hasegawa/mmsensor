@@ -123,8 +123,8 @@ def index():
         h=v.humidity
         t=v.temperature
         p=v.numOfPeople
-    if v.humidity > 50:
-        idx += (v.humidity - 50)
+    if h > 50:
+        idx += (h - 50)
 
     return render_template('index.html',
             idx=idx,
