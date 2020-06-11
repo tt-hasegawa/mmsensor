@@ -10,6 +10,9 @@ app.config['SECRET_KEY'] = 'matsusakaEDPcenter'
 auth = HTTPDigestAuth()
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 
+DIFF_JST_FROM_UTC = 9
+
+
 # API用DB接続クラス
 db=None
 if os.path.exists('/tmp'):
@@ -70,7 +73,7 @@ def get_Ventilations(numOfRecord):
     }
     labels = []
     for v in ventilist:
-        key=v.recdate.strftime('%Y-%m-%D %H:%M:%S')
+        key=v.recdate.strftime('%Y-%m-%d %H:%M:%S')
         labels.append(key)
         dataset1['data'].append(v.temperature)
         dataset2['data'].append(v.humidity)
@@ -84,7 +87,7 @@ def get_Ventilations(numOfRecord):
 def add_Ventilation():
     result="ok"
     try:
-        d = datetime.datetime.now()
+        d = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
         jsonData = request.json
         t = jsonData.get("temperature")
         h = jsonData.get("humidity")
