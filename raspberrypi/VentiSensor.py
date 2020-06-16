@@ -13,11 +13,11 @@ from PIL import Image
 from yolo import YOLO, detect_video
 from yolo2 import YOLO2
 
-#url='https://protected-caverns-16218.herokuapp.com/'
-url='https://192.168.46.128:3000'
+#url='https://xxxx.herokuapp.com/'
+url='https://192.168.1.1:3000'
 #proxies = {
-#    'http': 'http://proxy.matsusaka.co.jp:12080',
-#    'https': 'http://proxy.matsusaka.co.jp:12080'
+#    'http': 'http://proxy:8080',
+#    'https': 'http://proxy:8080'
 #}
 proxies = {
     'http': None,
