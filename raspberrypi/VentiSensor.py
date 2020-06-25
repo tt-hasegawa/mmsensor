@@ -9,28 +9,32 @@ import picamera
 import requests
 import sys
 import time
+import logging
 from PIL import Image
 from yolo import YOLO, detect_video
 from yolo2 import YOLO2
 
-#url='https://xxxx.herokuapp.com/'
-url='https://192.168.1.1:3000'
-#proxies = {
-#    'http': 'http://proxy:8080',
-#    'https': 'http://proxy:8080'
-#}
-proxies = {
-    'http': None,
-    'https': None
-}
+logging.basicConfig(filename='/tmp/venti-sensor.log', level=logging.DEBUG)
 
+url='https://frozen-reef-90562.herokuapp.com/'
+#url='https://192.168.46.128:3000'
+proxies = {
+    'http': 'http://proxy.matsusaka.co.jp:12080',
+    'https': 'http://proxy.matsusaka.co.jp:12080'
+}
+#proxies = {
+#    'http': None,
+#    'https': None
+#}
+
+logging.info("VentiSensor Start.[{}]".format(url))
 
 # initialize GPIO
 GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BCM)
 
-# read data using pin 14
-instance = dht11.DHT11(pin=14)
+# read data using pin 4
+instance = dht11.DHT11(pin=4)
  
 # Initialize Camera
 camera = picamera.PiCamera()
@@ -40,14 +44,19 @@ time.sleep(2)
 yolo = YOLO()
 yolo2 = YOLO2()
 
+logging.info("VentiSensor Initialized.")
+
 try:
     while True:
+        logging.info("Check Start.")
         temperature=0
         humidity=0
         result = instance.read()
         if result.is_valid():
             temperature=result.temperature
             humidity=result.humidity
+
+        logging.info("Check Temperature:{} Humidity:{}.".format(temperature,humidity))
 
         if temperature > 0 and humidity > 0:
             camera.capture('tmp.jpg')
@@ -61,25 +70,26 @@ try:
                 if r[0].startswith('person'):
                     print(r[0])
                     person+=1
+            logging.info("Check Camera People:{}.".format(person))
 
             uploadData={
 		    'temperature':str(temperature),
 		    'humidity':str(humidity),
 		    'numOfpeople':str(person),
             }
-            print(uploadData)
+            logging.info(uploadData)
             try:
                 with open('out.jpg', 'rb') as f:
                     data = f.read()
                     uploadData['image']=base64.b64encode(data).decode('utf-8')
-                    print("POST Start. {}".format(response.text))
+                    logging.info("POST Start.{}")
                     response = requests.post(url + '/addVentilation/' , json=uploadData, proxies=proxies)
-                    print("POST End. {}".format(response.text))
+                    logging.info("POST End. {}".format(response.text))
             except Exception as e:
-                print(e)
+                logging.info(e)
         time.sleep(10)
 
 except KeyboardInterrupt:
-    print("Cleanup")
+    logging.info("Cleanup")
     GPIO.cleanup()
 
