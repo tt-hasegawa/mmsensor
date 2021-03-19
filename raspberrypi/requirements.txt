@@ -13,7 +13,7 @@ colorama==0.3.7
 colorzero==1.1
 configparser==3.5.0b2
 cookies==2.2.1
-cryptography==2.6.1
+cryptography==3.2
 drumhat==0.1.0
 entrypoints==0.3
 enum34==1.1.6
@@ -85,4 +85,4 @@ urllib3==1.24.2
 Werkzeug==0.15.3
 wrapt==1.12.1
 yolov3==1.7
-tensorflow==1.14.0
+tensorflow==2.3.1
